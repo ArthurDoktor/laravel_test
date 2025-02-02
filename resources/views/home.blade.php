@@ -5,15 +5,39 @@
     <title>Document</title>
 </head>
 <body>
-    <div style="border: 3px solid black;">
+
+    @auth
+
+        <p>Wuhu you are loged in!</p>
+        <form action="/logout" method="POST">
+            <button>Log out</button>
+        </form>
+
+    @else
+
+        <div style="border: 3px solid black;">
         <h1>Register</h1>
         <form action="/register" method="POST">
             @csrf
-            <input type="text" placeholder="Username">
-            <input type="text" placeholder="e-mail">
-            <input type="password" placeholder="password">
+            <input name="name" type="text" placeholder="Username">
+            <input name="email" type="text" placeholder="e-mail">
+            <input name="password" type="password" placeholder="password">
             <button>Register</button>
         </form>
-    </div>
+
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        </div>
+
+    @endauth
+
 </body>
 </html>
