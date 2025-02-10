@@ -10,24 +10,6 @@ class UserController extends Controller
 {
     public function registering(Request $request)
     {
-        /*
-        $custom_error_message = [
-            'name.required' => 'The Username field is required.',
-            'name.string' => 'The Username must be a string.',
-            'name.max' => 'The Username may not be greater than 255 characters.',
-            'name.min' => 'The Username may not be less than 3 characters.',
-
-            'email.required' => 'The Email field is required.',
-            'email.email' => 'The Email must be a valid email address.',
-            'email.unique' => 'The Email has already been taken.',
-
-            'password.required' => 'The Password field is required.',
-            'password.min' => 'The Password must be at least 8 characters.',
-            'password.max' => 'The Password may not be greater than 255 characters.',
-            'password.string' => 'The Password must be a string.',
-        ];
-        */
-
         $Data_from_form = $request->validate([
             'name' => 'required|string|max:255|min:3|unique:users',
             'email' => 'required|string|email|unique:users',
@@ -41,6 +23,27 @@ class UserController extends Controller
 
 
         auth()->login($user);
+
+        return redirect('/');
+    }
+
+    public function logout()
+    {
+        auth()->logout();
+
+        return redirect('/');
+    }
+
+    public function login(Request $request)
+    {
+        $Data_from_form = $request->validate([
+            'email' => 'required',
+            'password' => 'required',
+        ]);
+
+        if (auth()->attempt(['email'=>$Data_from_form['email'], 'password'=>$Data_from_form['password']])) {
+            $request->session()->regenerate();
+        }
 
         return redirect('/');
     }
